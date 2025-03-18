@@ -1,33 +1,42 @@
 ﻿namespace APBD_Ex2;
 
-public class LiquidContainer : Container, IHazardNotifier
+public class LiquidContainer(
+    double containerOwnWeight,
+    double height,
+    double depth,
+    double maxCargoLoadWeight,
+    bool isDangerous)
+    : Container(containerOwnWeight, height, depth, maxCargoLoadWeight, "L"), IHazardNotifier
 {
-    private bool IsDangerous { get; set; }
-
-    public LiquidContainer(double ownWeight, double height, double depth, double maxLoad, bool isDangerous) : base(ownWeight, height, depth, maxLoad, "L")
-    {
-        IsDangerous = isDangerous;
-    }
+    private bool IsDangerous { get; set; } = isDangerous;
 
     public void NotifyHazard(string message)
     {
         Console.WriteLine($"[ALERT] {message}");
     }
 
-    public override void LoadCargo(double cargoWeight)
+    public override void LoadContainerWithCargo(double cargoWeight)
     {
-        if (IsDangerous && cargoWeight > MaxLoad * 0.5)
+        
+        if (cargoWeight <= 0)
+            throw new ArgumentOutOfRangeException(nameof(cargoWeight), "Cargo weight must be greater than zero.");
+        
+        var maxAllowedWeight = IsDangerous ? MaxCargoLoadWeight * 0.5 : MaxCargoLoadWeight * 0.9;
+        
+        
+        if (cargoWeight > maxAllowedWeight)
         {
-            NotifyHazard($"Próba załadunku {cargoWeight}kg do niebezpiecznego kontenera {SerialNumber}, co przekracza 50% pojemności.");
-            throw new OverfillException("Przekroczono limit 50% dla niebezpiecznych substancji!");
-            
-        } else if (!IsDangerous && cargoWeight > MaxLoad * 0.9)
-        {
-            NotifyHazard($"Próba załadunku {cargoWeight}kg do zwykłego kontenera {SerialNumber}, co przekracza 90% pojemności.");
-            throw new OverfillException("Przekroczono limit 90% dla zwykłych cieczy!");
+            NotifyHazard($"Attempted to load {cargoWeight}kg into {(IsDangerous ? "hazardous" : "regular")} container {SerialNumber}, exceeding allowed capacity ({maxAllowedWeight}kg).");
+            throw new OverfillException($"Exceeded {(IsDangerous ? "50%" : "90%")} limit for {(IsDangerous ? "hazardous" : "regular")} liquids!");
         }
         
-        CargoWeight = cargoWeight;
-        Console.WriteLine($"Załadowano {cargoWeight}kg do kontenera {SerialNumber}.");
+        
+        CargoLoadWeight = cargoWeight;
+        Console.WriteLine($"Successfully loaded {cargoWeight}kg into container {SerialNumber}.");
+    }
+
+    public override string PrintContainerInfo()
+    {
+        return base.PrintContainerInfo() + $", Hazardous: {(IsDangerous ? "Yes" : "No")}";
     }
 }

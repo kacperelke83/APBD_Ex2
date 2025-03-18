@@ -1,36 +1,51 @@
 ﻿namespace APBD_Ex2;
 
-public class GasContainer : Container, IHazardNotifier
+public class GasContainer(
+    double containerOwnWeight,
+    double height,
+    double depth,
+    double maxCargoLoadWeight,
+    double pressure)
+    : Container(containerOwnWeight, height, depth,
+        maxCargoLoadWeight, "G"), IHazardNotifier
 {
-
-    public double Pressure { get; set; }
-    
-    public GasContainer(double ownWeight, double height, double depth, double maxLoad, double pressure) : base(ownWeight, height, depth,
-        maxLoad, "G")
-    {
-        Pressure = pressure;
-    }
+    private double Pressure { get; set; } = pressure;
 
     public void NotifyHazard(string message)
     {
         Console.WriteLine($"[ALERT] {message}");
     }
     
-    public override void EmptyCargo()
+    public override void EmptyContainer()
     {
-        CargoWeight *= 0.05;
-        Console.WriteLine($"Kontener {SerialNumber} został opróżniony, pozostało 5% ładunku.");
+        CargoLoadWeight *= 0.05;
+        Console.WriteLine($"Container {SerialNumber} has been emptied, 5% of the cargo remains.");
     }
     
-    public override void LoadCargo(double cargoWeight)
+    public override void LoadContainerWithCargo(double cargoWeight)
     {
-        if ( cargoWeight > MaxLoad)
-        {
-            NotifyHazard($"Próba załadunku {cargoWeight}kg do niebezpiecznego kontenera {SerialNumber}, co przekracza 50% pojemności.");
-            throw new OverfillException("Przekroczono limit 50% dla niebezpiecznych substancji!");
-            
-        } 
         
-        CargoWeight = cargoWeight;
+        if (cargoWeight <= 0)
+            throw new ArgumentOutOfRangeException(nameof(cargoWeight), "Cargo weight must be greater than zero.");
+        
+        if (cargoWeight > MaxCargoLoadWeight * 0.5)
+        {
+            NotifyHazard($"Attempted to load {cargoWeight}kg into hazardous container {SerialNumber}, exceeding 50% capacity.");
+        }
+
+        if (cargoWeight > MaxCargoLoadWeight)
+        {
+            throw new OverfillException("Exceeded the limit for hazardous substances!");
+        }
+
+        CargoLoadWeight = cargoWeight;
+        Console.WriteLine($"Container {SerialNumber} successfully loaded with {cargoWeight}kg.");
+        
     }
+
+    public override string PrintContainerInfo()
+    {
+        return base.PrintContainerInfo() + $", Pressure : {Pressure} bar";
+    }
+    
 }
