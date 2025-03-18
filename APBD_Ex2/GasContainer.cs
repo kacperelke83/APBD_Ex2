@@ -21,31 +21,25 @@ public class GasContainer(
         CargoLoadWeight *= 0.05;
         Console.WriteLine($"Container {SerialNumber} has been emptied, 5% of the cargo remains.");
     }
-    
-    public override void LoadContainerWithCargo(double cargoWeight)
+
+    protected override void LoadContainerWithCargo(double cargoWeight)
     {
-        
-        if (cargoWeight <= 0)
-            throw new ArgumentOutOfRangeException(nameof(cargoWeight), "Cargo weight must be greater than zero.");
         
         if (cargoWeight > MaxCargoLoadWeight * 0.5)
         {
             NotifyHazard($"Attempted to load {cargoWeight}kg into hazardous container {SerialNumber}, exceeding 50% capacity.");
         }
 
-        if (cargoWeight > MaxCargoLoadWeight)
-        {
-            throw new OverfillException("Exceeded the limit for hazardous substances!");
-        }
-
-        CargoLoadWeight = cargoWeight;
-        Console.WriteLine($"Container {SerialNumber} successfully loaded with {cargoWeight}kg.");
-        
+       base.LoadContainerWithCargo(cargoWeight);
+       
     }
 
-    public override string PrintContainerInfo()
+    public override void PrintContainerInfo()
     {
-        return base.PrintContainerInfo() + $", Pressure : {Pressure} bar";
+       
+        base.PrintContainerInfo();
+        Console.WriteLine($", Pressure : {Pressure} bar");
+       
     }
     
 }

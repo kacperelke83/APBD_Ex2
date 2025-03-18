@@ -17,15 +17,22 @@ internal static class Program
             var liqContainer = new LiquidContainer(1000, 500, 300, 3000, false);
 
             var gasContainer = new GasContainer(900, 250, 400, 2500, 10);
-
+            
+            
+                // dodac do try catcha
             var refBananasContainer =
                 new RefrigeratedContainer(420, 150, 700, 2500, ProductType.Bananas, 14); // Bananas (13.3) - good temp 
             
+            // Console.WriteLine(refBananasContainer.PrintContainerInfo());
+
+            //
             // var refMeatContainer =
             //     new RefrigeratedContainer(360, 220, 300, 1500, ProductType.Meat, -90); // Meat (-14) - bad temp
 
 
-            Console.WriteLine(refBananasContainer.PrintContainerInfo());
+            refBananasContainer.LoadContainerWithCargo(1500,ProductType.Bananas);
+            
+            refBananasContainer.PrintContainerInfo();
 
 
     }

@@ -15,11 +15,8 @@ public class LiquidContainer(
         Console.WriteLine($"[ALERT] {message}");
     }
 
-    public override void LoadContainerWithCargo(double cargoWeight)
+    protected override void LoadContainerWithCargo(double cargoWeight)
     {
-        
-        if (cargoWeight <= 0)
-            throw new ArgumentOutOfRangeException(nameof(cargoWeight), "Cargo weight must be greater than zero.");
         
         var maxAllowedWeight = IsDangerous ? MaxCargoLoadWeight * 0.5 : MaxCargoLoadWeight * 0.9;
         
@@ -30,13 +27,13 @@ public class LiquidContainer(
             throw new OverfillException($"Exceeded {(IsDangerous ? "50%" : "90%")} limit for {(IsDangerous ? "hazardous" : "regular")} liquids!");
         }
         
-        
-        CargoLoadWeight = cargoWeight;
-        Console.WriteLine($"Successfully loaded {cargoWeight}kg into container {SerialNumber}.");
+        base.LoadContainerWithCargo(cargoWeight);
+       
     }
 
-    public override string PrintContainerInfo()
+    public override void PrintContainerInfo()
     {
-        return base.PrintContainerInfo() + $", Hazardous: {(IsDangerous ? "Yes" : "No")}";
+        base.PrintContainerInfo();
+        Console.WriteLine($", Hazardous: {(IsDangerous ? "Yes" : "No")}");
     }
 }

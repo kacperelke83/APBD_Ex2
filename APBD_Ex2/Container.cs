@@ -41,28 +41,28 @@ public abstract class Container
       CargoLoadWeight = 0;
    }
 
-   public virtual void LoadContainerWithCargo(double loadWeight)
+   protected virtual void LoadContainerWithCargo(double loadWeight)
    {
       if (loadWeight < 0)
-      {
          throw new ArgumentException("Cargo weight cannot be negative");
-      }
+      
 
       if (loadWeight > MaxCargoLoadWeight)
-      {
          throw new OverfillException(
             $"Cargo weight {loadWeight}kg exceeds maximum capacity of {MaxCargoLoadWeight}kg.");
-      }
+      
 
-      CargoLoadWeight = loadWeight;
+      CargoLoadWeight += loadWeight;
       Console.WriteLine($"Cargo {SerialNumber} loaded with {CargoLoadWeight}kg out of {MaxCargoLoadWeight}kg.");
    }
 
-   public virtual string PrintContainerInfo()
+   public virtual void PrintContainerInfo()
    {
-      return $"Container {SerialNumber} - Type: {Type}, " +
-             $"Load: {CargoLoadWeight}/{MaxCargoLoadWeight}kg, " +
-             $"Height: {Height}cm, Depth: {Depth}cm, Own Container Weight: {ContainerOwnWeight}kg";
+      
+      Console.WriteLine($"Container {SerialNumber} - Type: {Type}, " +
+         $"Load: {CargoLoadWeight}/{MaxCargoLoadWeight}kg, " +
+         $"Height: {Height}cm, Depth: {Depth}cm, Own Container Weight: {ContainerOwnWeight}kg");
+      
    }
    
    }

@@ -21,8 +21,6 @@ public class RefrigeratedContainer : Container
 
     public void LoadContainerWithCargo(double weight, ProductType product)
     {
-        if (weight <= 0)
-            throw new ArgumentOutOfRangeException(nameof(weight), "Cargo weight must be greater than zero.");
         
         if (product != Product)
             throw new InvalidOperationException($"Container {SerialNumber} can only store {Product}, not {product}!");
@@ -30,12 +28,13 @@ public class RefrigeratedContainer : Container
         if (weight > MaxCargoLoadWeight)
             throw new InvalidOperationException($"Overload! Container {SerialNumber} cannot exceed {MaxCargoLoadWeight} kg.");
 
-        CargoLoadWeight += weight;
-        Console.WriteLine($"Loaded {weight} kg of {Product} into container {SerialNumber}.");
+        base.LoadContainerWithCargo(weight);
+        
     }
 
-    public override string PrintContainerInfo()
+    public override void PrintContainerInfo()
     {
-        return base.PrintContainerInfo() + $", Product: {Product}, Temperature: {Temperature}°C";
+        base.PrintContainerInfo();
+        Console.WriteLine($", Product: {Product}, Temperature: {Temperature}°C");
     }
 }
