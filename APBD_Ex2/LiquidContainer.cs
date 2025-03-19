@@ -15,7 +15,7 @@ public class LiquidContainer(
         Console.WriteLine($"[ALERT] {message}");
     }
 
-    protected override void LoadContainerWithCargo(double cargoWeight)
+    public override void LoadContainerWithCargo(double cargoWeight)
     {
         
         var maxAllowedWeight = IsDangerous ? MaxCargoLoadWeight * 0.5 : MaxCargoLoadWeight * 0.9;

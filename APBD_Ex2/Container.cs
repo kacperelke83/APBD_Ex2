@@ -41,7 +41,7 @@ public abstract class Container
       CargoLoadWeight = 0;
    }
 
-   protected virtual void LoadContainerWithCargo(double loadWeight)
+   public virtual void LoadContainerWithCargo(double loadWeight)
    {
       if (loadWeight < 0)
          throw new ArgumentException("Cargo weight cannot be negative");
@@ -52,7 +52,7 @@ public abstract class Container
             $"Cargo weight {loadWeight}kg exceeds maximum capacity of {MaxCargoLoadWeight}kg.");
       
 
-      CargoLoadWeight += loadWeight;
+      CargoLoadWeight = loadWeight;
       Console.WriteLine($"Cargo {SerialNumber} loaded with {CargoLoadWeight}kg out of {MaxCargoLoadWeight}kg.");
    }
 

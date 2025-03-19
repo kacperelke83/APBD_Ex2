@@ -22,7 +22,7 @@ public class GasContainer(
         Console.WriteLine($"Container {SerialNumber} has been emptied, 5% of the cargo remains.");
     }
 
-    protected override void LoadContainerWithCargo(double cargoWeight)
+    public override void LoadContainerWithCargo(double cargoWeight)
     {
         
         if (cargoWeight > MaxCargoLoadWeight * 0.5)
